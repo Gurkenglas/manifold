@@ -6,6 +6,7 @@ import { useUserById } from 'web/hooks/use-user'
 import { CommentTipMap } from 'web/hooks/use-tip-txns'
 import { LiquidityProvision } from 'common/liquidity-provision'
 import { Avatar } from 'web/components/avatar'
+import { Grid, _ } from 'gridjs-react'
 
 export function ContractTabs(props: {
   contract: Contract
@@ -16,11 +17,19 @@ export function ContractTabs(props: {
   tips: CommentTipMap
 }) {
   const { bets } = props
-  const u = useUserById(bets[0].userId)
+  const FormatUser = (s: string) => {
+    const u = useUserById(s)
+    return _(
+      <div className="flex">
+        <Avatar username={u?.username} avatarUrl={u?.avatarUrl} size="sm" />
+        {u?.username}
+      </div>
+    )
+  }
   return (
-    <div className="flex">
-      <Avatar username={u?.username} avatarUrl={u?.avatarUrl} size="sm" />
-      {u?.username}
-    </div>
+    <Grid
+      data={[{ userId: bets[0].userId }]}
+      columns={[{ name: 'User', id: 'userId', formatter: FormatUser }]}
+    />
   )
 }
